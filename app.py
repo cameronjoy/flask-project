@@ -3,17 +3,22 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 db = SQLAlchemy(app)
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(20))
+    name = db.Column(db.String(20))
+    todo = db.relationship('Todo', backref='owner')
+
 
 class Todo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    # user = db.Column(db.String(80))
-    # username = db.Column(db.String(80), unique=True)
-    # password = db.Column(db.String(80))
     content = db.Column(db.String(200), nullable=False)
     completed = db.Column(db.Integer, default=0)
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
+    owner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __repr__(self):
         return '<Task %r>' % self.id
