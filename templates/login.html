@@ -1,0 +1,16 @@
+{% extends 'template.html' %}
+
+{% block head %}
+{% endblock%}
+
+{% block body %}
+<div>
+    <h1>login or register</h1>
+    <form action="/" method="POST">
+        <input type="text" placeholder="Enter your username!" name="user" id='user'>
+        <br>
+        <input type="password" placeholder="Enter your password!">
+        <input type="submit">
+    </form>
+</div>
+{% endblock%}

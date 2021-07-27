@@ -24,16 +24,42 @@ class Todo(db.Model):
         return '<Task %r>' % self.id
 
 
+
 @app.route('/', methods=['POST', 'GET'])
 def home():
+    if request.method == 'POST':
+        current_user = request.form['user']
+        exists = db.session.query(User.id).filter_by(username=current_user).first() is not None
+        if exists == False:
+            new_user = User(username=current_user)
+
+            try:
+                db.session.add(new_user)
+                db.session.commit()
+                return render_template('index.html', current_user=current_user)
+            except:
+                print('error!')
+        else:
+            return render_template('index.html', current_user=current_user)
+
+    else:
+        return render_template('login.html',)
+        
+
+
+
+
+@app.route('/todo', methods=['POST', 'GET'])
+def todo():
     if request.method =='POST':
         task_content = request.form['content']
         new_task = Todo(content=task_content)
 
+
         try:
             db.session.add(new_task)
             db.session.commit()
-            return redirect('/')
+            return redirect('/todo')
         except:
             print('error!')
 
